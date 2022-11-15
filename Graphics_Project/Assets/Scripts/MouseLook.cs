@@ -12,10 +12,11 @@ public class MouseLook : MonoBehaviour
         };
 
     public MouseAxis mouseAxis = MouseAxis.X;
-    public float horSensitivity = 9.0f;
-    public float vertSensitivity = 9.0f;
+    public float horSensitivity = 3.0f;
+    public float vertSensitivity = 3.0f;
     public float maxVertAngle = 45f;
     public float minVertAngle = -45f;
+
     // Start is called before the first frame update
     public float vertRotation = 0;
     void Start()
@@ -28,13 +29,13 @@ public class MouseLook : MonoBehaviour
     {
         if (mouseAxis == MouseAxis.X)
         {
-            float rotationDelta = horSensitivity * Input.GetAxis("Horizontal") * Time.deltaTime;
+            float rotationDelta = horSensitivity * Input.GetAxis("Mouse X");
             transform.Rotate(0, rotationDelta, 0);
         } 
         if (mouseAxis == MouseAxis.Y)
         {
-            float rotationDelta = horSensitivity * Input.GetAxis("Horizontal") * Time.deltaTime;
-            vertRotation = Mathf.Clamp(vertRotation, minVertAngle, maxVertAngle);
+            float rotationDelta = vertSensitivity * Input.GetAxis("Mouse Y");
+            vertRotation = Mathf.Clamp(vertRotation - rotationDelta, minVertAngle, maxVertAngle);
 
             float horizontalRot = transform.localEulerAngles.y;
             transform.localEulerAngles = new Vector3(vertRotation, horizontalRot, 0);

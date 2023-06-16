@@ -4,22 +4,32 @@ using UnityEngine;
 
 [RequireComponent(typeof(PlayerManager))]
 [RequireComponent(typeof(InventoryManager))]
+[RequireComponent(typeof(MissionManager))]
+[RequireComponent (typeof(DataManager))]
 public class Managers : MonoBehaviour
 {
     NetworkService network = new NetworkService();
     public static PlayerManager Player { get; private set; }
     public static InventoryManager Inventory { get; private set; }
+    public static MissionManager Mission { get; private set; }
+    public static DataManager Data { get; private set; }
 
     private List<IGameManager> startSequence;
 
     public void Awake()
     {
+        DontDestroyOnLoad(gameObject);
+
         Player = GetComponent<PlayerManager>();
         Inventory = GetComponent<InventoryManager>();
+        Mission = GetComponent<MissionManager>();
+        Data = GetComponent<DataManager>();
 
         startSequence = new List<IGameManager>();
         startSequence.Add(Player);
         startSequence.Add(Inventory);
+        startSequence.Add(Mission);
+        startSequence.Add(Data);
 
         StartCoroutine(StartupManagers());
     }
@@ -48,21 +58,13 @@ public class Managers : MonoBehaviour
             if (numReady > lastReady)
             {
                 Debug.Log($"Progress: {numReady}/{numModules}");
+                Messenger<int, int>.Broadcast(
+                    StartupEvent.MANAGERS_PROGRESS, numReady, numModules);
+                }
                 yield return null;
-            }
-            Debug.Log("All managers started up");
         }
-    }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        Debug.Log("All managers started up");
+        Messenger.Broadcast(StartupEvent.MANAGERS_STARTED);
     }
 }

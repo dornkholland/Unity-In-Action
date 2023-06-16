@@ -17,10 +17,15 @@ public class PlayerManager : MonoBehaviour, IGameManager
 
         network = service;
 
-        health = 50;
-        maxHealth = 100;
+        UpdateData(50, 100);
 
         status = ManagerStatus.Started;
+    }
+
+    public void UpdateData(int health, int maxHealth)
+    {
+        this.health = health;
+        this.maxHealth = maxHealth;
     }
 
     public void ChangeHealth(int value)
@@ -34,17 +39,16 @@ public class PlayerManager : MonoBehaviour, IGameManager
             health = 0;
         }
 
+        if (health == 0)
+        {
+            Messenger.Broadcast(GameEvent.LEVEL_FAILED);
+        }
+
         Messenger.Broadcast(GameEvent.HEALTH_UPDATED);
     }
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
+    public void Respawn() 
     {
-        
+        UpdateData(50, 100);
     }
 }

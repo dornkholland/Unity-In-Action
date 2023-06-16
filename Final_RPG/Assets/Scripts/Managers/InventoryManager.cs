@@ -92,14 +92,13 @@ public class InventoryManager : MonoBehaviour, IGameManager
         return true;
     }
 
-    void Start()
+    public void UpdateData(Dictionary<string, int> items)
     {
-
+        this.items = items;
     }
 
-    // Update is called once per frame
-    void Update()
+    public Dictionary<string, int> GetData()
     {
-        
+        return items;
     }
 }
